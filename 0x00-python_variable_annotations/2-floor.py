@@ -4,7 +4,7 @@ module 2-floor
 """
 import math
 
-def floor(n: flaot) -> float:
+def floor(n: float) -> float:
     """
     Returns the floor of the given float
     """
