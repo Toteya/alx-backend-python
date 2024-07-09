@@ -4,13 +4,11 @@ module: 2-measure_runtime
 """
 import asyncio
 import time
-from typing import List
-
 
 async_comprehension = __import__('1-async_comprehension').async_comprehension
 
 
-async def measure_runtime():
+async def measure_runtime() -> float:
     """
     measures the runtime of four concurrent coroutines
     """
