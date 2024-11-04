@@ -32,13 +32,52 @@ class TestGithubOrgClient(TestCase):
     def test_public_repos_url(self):
         """ Tests the public_repos_url method
         """
-        fake_json = {'repos_url': 'OK'}
-        # mock_org.return_value = fake_json
+        fake_payload = {
+            'login': 'google',
+            'url': 'https://api.github.com/orgs/google',
+            'repos_url': 'https://api.github.com/orgs/google/repos'
+        }
 
         with patch(
             'client.GithubOrgClient.org',
             new_callable=PropertyMock
         ) as mock_org:
-            mock_org.return_value = fake_json
-            obj = GithubOrgClient('org_name')
-            self.assertEqual(obj._public_repos_url, 'OK')
+            mock_org.return_value = fake_payload
+            obj = GithubOrgClient('google')
+            self.assertEqual(obj._public_repos_url, fake_payload['repos_url'])
+
+    @patch('client.get_json')
+    def test_public_repos(self, mock_get_json):
+        """ Tests the public_repos method
+        """
+        fake_payload = [
+            {
+                "id": 3248507,
+                "node_id": "MDEwOlJlcG9zaXRvcnkzMjQ4NTA3",
+                "name": "ruby-openid-apps-discovery",
+            },
+            {
+                "id": 3975462,
+                "node_id": "MDEwOlJlcG9zaXRvcnkzOTc1NDYy",
+                "name": "anvil-build",
+            },
+            {
+                "id": 5072378,
+                "node_id": "MDEwOlJlcG9zaXRvcnk1MDcyMzc4",
+                "name": "googletv-android-samples",
+            }
+        ]
+        mock_get_json.return_value = fake_payload
+        with patch(
+            'client.GithubOrgClient._public_repos_url',
+            new_callable=PropertyMock
+        ) as mock_public_repos_url:
+            obj = GithubOrgClient('google')
+            fake_payload_repos = [
+                "ruby-openid-apps-discovery",
+                "anvil-build",
+                "googletv-android-samples",
+            ]
+            self.assertEqual(obj.public_repos(), fake_payload_repos)
+            mock_get_json.assert_called_once()
+            mock_public_repos_url.assert_called_once()
