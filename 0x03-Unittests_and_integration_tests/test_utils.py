@@ -48,7 +48,7 @@ class TestGetJson(TestCase):
 
         self.assertEqual(get_json(test_url), test_payload)
         mock_requests_get.assert_called_once_with(test_url)
-    
+
 
 class TestMemoize(TestCase):
     """
@@ -58,7 +58,7 @@ class TestMemoize(TestCase):
         """ Tests the utils.memoize decorator that memoizes a method
         """
         class TestClass:
-            
+
             def a_method(self):
                 return 42
 
@@ -71,7 +71,7 @@ class TestMemoize(TestCase):
             test_obj = TestClass()
             response1 = test_obj.a_property
             response2 = test_obj.a_property
-        
+
         self.assertEqual(response1, 42)
         self.assertEqual(response2, 42)
         mock_a_method.assert_called_once()
