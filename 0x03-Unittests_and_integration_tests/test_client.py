@@ -81,3 +81,12 @@ class TestGithubOrgClient(TestCase):
             self.assertEqual(obj.public_repos(), fake_payload_repos)
             mock_get_json.assert_called_once()
             mock_public_repos_url.assert_called_once()
+
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False)
+    ])
+    def test_has_license(self, repo, key, expected):
+        """ Tests GithubOrgClient.has_license method
+        """
+        self.assertEqual(GithubOrgClient.has_license(repo, key), expected)
